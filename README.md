@@ -8,6 +8,8 @@ AI-powered daily worklog manager. Type what you worked on in natural language, a
 
 > **Disclaimer:** This project is intended for **personal use only** and should be **hosted locally**. It is not production-grade software. The entire codebase was vibe coded with [Claude](https://claude.ai) by Anthropic.
 
+![WorkLog AI Dashboard](media/dashboard-light.png)
+
 ## Features
 
 - **Natural language input** — describe your day and AI structures it automatically
