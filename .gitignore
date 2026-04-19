@@ -15,6 +15,10 @@ data/
 # Config (contains API keys)
 config.json
 
+# Auth secrets
+.jwt-secret
+users.json
+
 # OS
 .DS_Store
 Thumbs.db

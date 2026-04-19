@@ -58,3 +58,15 @@ export interface ToggleTaskRequest {
   date: string;
   index: number;
 }
+
+export interface User {
+  id: string;
+  username: string;
+  passwordHash: string;
+  createdAt: string;
+}
+
+export interface JwtPayload {
+  userId: string;
+  username: string;
+}

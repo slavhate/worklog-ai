@@ -172,7 +172,7 @@ export default function Dashboard() {
 
           <section style={{ marginBottom: 32 }}>
             <h2 style={sectionTitle}>Overdue Items</h2>
-            <TaskList tasks={(data?.overdueTasks || []).map((t) => ({ ...t }))} showDate />
+            <TaskList tasks={(data?.overdueTasks || []).map((t) => ({ ...t }))} />
           </section>
 
           {setup?.tokenUsage && (

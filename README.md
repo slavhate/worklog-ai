@@ -1,6 +1,12 @@
 # WorkLog AI
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Docker Hub](https://img.shields.io/docker/pulls/shri32msi/worklog-ai-backend?label=Docker%20Hub)](https://hub.docker.com/u/shri32msi)
+[![Vibe Coded](https://img.shields.io/badge/Vibe%20Coded%20with-Claude-blueviolet)](https://claude.ai)
+
 AI-powered daily worklog manager. Type what you worked on in natural language, and AI extracts tasks, decisions, meetings, and notes into structured, searchable markdown files.
+
+> **Disclaimer:** This project is intended for **personal use only** and should be **hosted locally**. It is not production-grade software. The entire codebase was vibe coded with [Claude](https://claude.ai) by Anthropic.
 
 ## Features
 
@@ -18,6 +24,7 @@ AI-powered daily worklog manager. Type what you worked on in natural language, a
 - **Processing indicators** — animated progress bar and success summary on submission
 - **Dashboard** — today's tasks, meetings, pending items, overdue items at a glance
 - **Multiple AI providers** — Ollama (local, default), OpenAI, or Claude
+- **User authentication** — JWT-based login and registration with bcrypt password hashing
 - **Fully containerized** — one `docker compose up` to start everything
 
 ## Quick Start
@@ -35,6 +42,10 @@ docker compose up --build
 ```
 
 Open http://localhost:3000 in your browser.
+
+### Authentication
+
+On first launch you'll see a **registration page** — create a username and password to get started. Subsequent visits show a login screen. Credentials are stored locally in the `data/` directory (bcrypt-hashed passwords, auto-generated JWT secret). Tokens expire after 7 days.
 
 #### Ollama setup
 
@@ -141,6 +152,24 @@ Each day produces a markdown file (`YYYY-MM-DD.md`):
 #sprint-12 #migration #api
 ```
 
+## Docker Images
+
+Pre-built images are available on Docker Hub:
+
+| Image | Description |
+|-------|-------------|
+| [`shri32msi/worklog-ai-backend`](https://hub.docker.com/r/shri32msi/worklog-ai-backend) | Node.js/Express API server |
+| [`shri32msi/worklog-ai-frontend`](https://hub.docker.com/r/shri32msi/worklog-ai-frontend) | React frontend served via Nginx |
+
+Pull and run directly:
+
+```bash
+docker pull shri32msi/worklog-ai-backend:latest
+docker pull shri32msi/worklog-ai-frontend:latest
+```
+
+Or use `docker compose up --build` to build from source.
+
 ## Tech Stack
 
 - **Frontend:** React 19, Vite 8, Tailwind CSS 4, TypeScript
@@ -151,4 +180,8 @@ Each day produces a markdown file (`YYYY-MM-DD.md`):
 
 ## License
 
-MIT
+This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
+
+---
+
+Made with Claude by Anthropic.

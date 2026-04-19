@@ -4,12 +4,11 @@ import type { TaskEntry } from "../types";
 
 interface TaskListProps {
   tasks: (TaskEntry & { date?: string; index?: number })[];
-  showDate?: boolean;
   onToggle?: () => void;
   onEditTask?: (index: number, field: keyof TaskEntry, value: string | boolean) => void;
 }
 
-export default function TaskList({ tasks, showDate, onToggle, onEditTask }: TaskListProps) {
+export default function TaskList({ tasks, onToggle, onEditTask }: TaskListProps) {
   async function handleToggle(date: string, index: number) {
     await api.toggleTask(date, index);
     onToggle?.();
@@ -39,7 +38,7 @@ export default function TaskList({ tasks, showDate, onToggle, onEditTask }: Task
             key={i}
             style={{
               display: "flex",
-              alignItems: "center",
+              alignItems: "flex-start",
               gap: 12,
               padding: "10px 16px",
               borderBottom: i < tasks.length - 1 ? "1px solid var(--color-border)" : "none",
@@ -65,6 +64,7 @@ export default function TaskList({ tasks, showDate, onToggle, onEditTask }: Task
                 flexShrink: 0,
                 transition: "all var(--transition-fast)",
                 padding: 0,
+                marginTop: 2,
               }}
             >
               {task.completed && (
@@ -73,52 +73,55 @@ export default function TaskList({ tasks, showDate, onToggle, onEditTask }: Task
                 </svg>
               )}
             </button>
-            {task.time && (
-              <span style={{ fontSize: 12, fontWeight: 600, color: "var(--color-accent)", minWidth: 40, fontVariantNumeric: "tabular-nums", flexShrink: 0 }}>
-                {task.time}
-              </span>
-            )}
-            {onEditTask ? (
-              <InlineEdit
-                value={task.text}
-                onSave={(v) => onEditTask(i, "text", v)}
-                style={{
-                  flex: 1,
-                  fontSize: 14,
-                  color: task.completed ? "var(--color-text-muted)" : "var(--color-text-primary)",
-                  textDecoration: "none",
-                }}
-              />
-            ) : (
-              <span
-                style={{
-                  flex: 1,
-                  fontSize: 14,
-                  color: task.completed ? "var(--color-text-muted)" : "var(--color-text-primary)",
-                  textDecoration: "none",
-                  transition: "color var(--transition-fast)",
-                }}
-              >
-                {task.text}
-              </span>
-            )}
-            {showDate && task.date && (
-              <span style={{ fontSize: 12, color: "var(--color-text-tertiary)" }}>{task.date}</span>
-            )}
-            {task.due && (
-              <span
-                style={{
-                  fontSize: 11,
-                  fontWeight: 500,
-                  padding: "2px 8px",
-                  borderRadius: 20,
-                  background: isOverdue ? "var(--color-danger-bg)" : "var(--color-warning-bg)",
-                  color: isOverdue ? "var(--color-danger)" : "var(--color-warning)",
-                }}
-              >
-                {task.due}
-              </span>
-            )}
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                {task.time && (
+                  <span style={{ fontSize: 12, fontWeight: 600, color: "var(--color-accent)", minWidth: 40, fontVariantNumeric: "tabular-nums", flexShrink: 0 }}>
+                    {task.time}
+                  </span>
+                )}
+                {onEditTask ? (
+                  <InlineEdit
+                    value={task.text}
+                    onSave={(v) => onEditTask(i, "text", v)}
+                    style={{
+                      flex: 1,
+                      fontSize: 14,
+                      color: task.completed ? "var(--color-text-muted)" : "var(--color-text-primary)",
+                      textDecoration: "none",
+                    }}
+                  />
+                ) : (
+                  <span
+                    style={{
+                      flex: 1,
+                      fontSize: 14,
+                      color: task.completed ? "var(--color-text-muted)" : "var(--color-text-primary)",
+                      textDecoration: "none",
+                      transition: "color var(--transition-fast)",
+                    }}
+                  >
+                    {task.text}
+                  </span>
+                )}
+              </div>
+              {task.due && (
+                <span
+                  style={{
+                    display: "inline-block",
+                    marginTop: 4,
+                    fontSize: 11,
+                    fontWeight: 500,
+                    padding: "2px 8px",
+                    borderRadius: 20,
+                    background: isOverdue ? "var(--color-danger-bg)" : "var(--color-warning-bg)",
+                    color: isOverdue ? "var(--color-danger)" : "var(--color-warning)",
+                  }}
+                >
+                  {task.due}
+                </span>
+              )}
+            </div>
           </div>
         );
       })}

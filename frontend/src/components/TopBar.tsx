@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useTheme } from "../contexts/ThemeContext";
+import { useAuth } from "../contexts/AuthContext";
 
 export default function TopBar() {
   const [query, setQuery] = useState("");
   const navigate = useNavigate();
   const { theme, toggle } = useTheme();
+  const { username, logout } = useAuth();
 
   function handleSearch(e: React.FormEvent) {
     e.preventDefault();
@@ -154,6 +156,34 @@ export default function TopBar() {
           >
             Settings
           </Link>
+
+          {username && (
+            <button
+              onClick={() => { logout(); navigate("/login"); }}
+              style={{
+                padding: "6px 14px",
+                fontSize: 13,
+                fontWeight: 500,
+                fontFamily: "inherit",
+                color: "var(--color-text-secondary)",
+                background: "var(--color-input-bg)",
+                border: "1px solid var(--color-border)",
+                borderRadius: "var(--radius-sm)",
+                cursor: "pointer",
+                transition: "background var(--transition-fast), color var(--transition-fast)",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "var(--color-surface-hover)";
+                e.currentTarget.style.color = "var(--color-text-primary)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "var(--color-input-bg)";
+                e.currentTarget.style.color = "var(--color-text-secondary)";
+              }}
+            >
+              Logout
+            </button>
+          )}
         </div>
       </div>
     </header>

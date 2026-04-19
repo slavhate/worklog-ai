@@ -7,7 +7,10 @@ import { SearchService } from "./services/search.js";
 import { ensureModels } from "./services/model-setup.js";
 import { AIProvider, AppConfig } from "./types/index.js";
 import { initTokenUsage } from "./services/token-usage.js";
+import { initAuth } from "./services/auth.js";
+import { authMiddleware } from "./middleware/auth.js";
 import healthRouter from "./routes/health.js";
+import authRouter from "./routes/auth.js";
 import { createEntriesRouter } from "./routes/entries.js";
 import { createTasksRouter } from "./routes/tasks.js";
 import { createSearchRouter } from "./routes/search.js";
@@ -24,12 +27,15 @@ async function main() {
 
   const dataPath = process.env.DATA_PATH || config.dataPath;
   initTokenUsage(dataPath);
+  await initAuth(dataPath);
 
   const app = express();
   app.use(cors());
   app.use(express.json());
 
   app.use("/api", healthRouter);
+  app.use("/api", authRouter);
+  app.use(authMiddleware);
   app.use("/api", createEntriesRouter(dataPath, () => provider, () => search));
   app.use("/api", createTasksRouter(dataPath));
   app.use("/api", createSearchRouter(() => search));

@@ -19,9 +19,9 @@ describe("TaskList", () => {
     expect(screen.getByText("2026-04-21")).toBeInTheDocument();
   });
 
-  it("renders date when showDate is true", () => {
-    const tasks = [{ text: "Task", completed: false, date: "2026-04-18", index: 0 }];
-    render(<TaskList tasks={tasks} showDate />);
-    expect(screen.getByText("2026-04-18")).toBeInTheDocument();
+  it("renders due date below task text", () => {
+    const tasks = [{ text: "Task", completed: false, due: "2026-04-20" }];
+    render(<TaskList tasks={tasks} />);
+    expect(screen.getByText("2026-04-20")).toBeInTheDocument();
   });
 });
