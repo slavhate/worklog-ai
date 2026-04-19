@@ -1,0 +1,99 @@
+import type { ReportData } from "../types";
+
+function escapeHtml(text: string): string {
+  return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
+export function generateReportHtml(report: ReportData, aiSummary?: string): string {
+  const s = report.stats;
+
+  const statsHtml = `
+    <div class="stats-bar">
+      <div class="stat"><div class="stat-value">${s.tasksCompleted}/${s.tasksTotal}</div><div class="stat-label">Tasks Completed</div></div>
+      <div class="stat"><div class="stat-value">${s.meetingsAttended}</div><div class="stat-label">Meetings</div></div>
+      <div class="stat"><div class="stat-value">${s.decisionsMade}</div><div class="stat-label">Decisions</div></div>
+      <div class="stat"><div class="stat-value">${s.notesCount}</div><div class="stat-label">Notes</div></div>
+      <div class="stat"><div class="stat-value">${s.daysWithEntries}</div><div class="stat-label">Active Days</div></div>
+    </div>`;
+
+  const highlightsHtml = report.highlights.length > 0
+    ? `<section><h2>Highlights</h2><ul>${report.highlights.map((h) => `<li><strong>${escapeHtml(h.date)}</strong> — ${escapeHtml(h.text)}</li>`).join("")}</ul></section>`
+    : "";
+
+  const aiSummaryHtml = aiSummary
+    ? `<section><h2>AI Summary</h2><div class="ai-summary">${escapeHtml(aiSummary).replace(/\n\n/g, "</p><p>").replace(/\n/g, "<br>")}</div></section>`
+    : "";
+
+  const decisionsHtml = report.decisions.length > 0
+    ? `<section><h2>Decisions</h2><ul>${report.decisions.map((d) => `<li><strong>${escapeHtml(d.date)}</strong> — ${escapeHtml(d.text)}</li>`).join("")}</ul></section>`
+    : "";
+
+  const meetingsHtml = report.meetings.length > 0
+    ? `<section><h2>Meetings</h2><ul>${report.meetings.map((m) => `<li><strong>${escapeHtml(m.date)} ${escapeHtml(m.time)}</strong> — ${escapeHtml(m.text)}${m.attendees && m.attendees.length > 0 ? ` <em>(${m.attendees.map(escapeHtml).join(", ")})</em>` : ""}</li>`).join("")}</ul></section>`
+    : "";
+
+  const pendingHtml = report.pendingTasks.length > 0
+    ? `<section><h2>Pending Tasks</h2><ul>${report.pendingTasks.map((t) => `<li>${escapeHtml(t.text)}${t.due ? ` <span class="due">(due: ${escapeHtml(t.due)})</span>` : ""} <em class="muted">from ${escapeHtml(t.date)}</em></li>`).join("")}</ul></section>`
+    : "";
+
+  const tagsHtml = report.tagFrequency.length > 0
+    ? `<section><h2>Top Tags</h2><div class="tags">${report.tagFrequency.slice(0, 15).map((t) => `<span class="tag">${escapeHtml(t.tag)} (${t.count})</span>`).join(" ")}</div></section>`
+    : "";
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Work Report — ${report.startDate} to ${report.endDate}</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: #1a1a1a; max-width: 800px; margin: 0 auto; padding: 40px 24px; line-height: 1.6; }
+  h1 { font-size: 24px; font-weight: 700; margin-bottom: 4px; }
+  .subtitle { font-size: 14px; color: #666; margin-bottom: 24px; }
+  .stats-bar { display: flex; gap: 12px; margin-bottom: 32px; flex-wrap: wrap; }
+  .stat { flex: 1; min-width: 100px; background: #f5f5f5; border-radius: 8px; padding: 16px; text-align: center; }
+  .stat-value { font-size: 28px; font-weight: 700; color: #2563eb; }
+  .stat-label { font-size: 12px; color: #666; text-transform: uppercase; letter-spacing: 0.04em; margin-top: 4px; }
+  section { margin-bottom: 28px; }
+  h2 { font-size: 16px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: #444; margin-bottom: 12px; padding-bottom: 6px; border-bottom: 1px solid #e5e5e5; }
+  ul { list-style: none; padding: 0; }
+  li { padding: 6px 0; border-bottom: 1px solid #f0f0f0; font-size: 14px; }
+  li:last-child { border-bottom: none; }
+  strong { font-weight: 600; }
+  em { font-style: normal; color: #888; }
+  .due { color: #dc2626; font-weight: 500; }
+  .muted { color: #999; font-size: 12px; }
+  .ai-summary { background: #f0f7ff; border-left: 3px solid #2563eb; padding: 16px; border-radius: 4px; font-size: 14px; }
+  .ai-summary p { margin-bottom: 12px; }
+  .ai-summary p:last-child { margin-bottom: 0; }
+  .tags { display: flex; gap: 8px; flex-wrap: wrap; }
+  .tag { font-size: 12px; font-weight: 500; padding: 4px 12px; border-radius: 20px; background: #e8e8e8; color: #555; }
+  .footer { margin-top: 40px; padding-top: 16px; border-top: 1px solid #e5e5e5; font-size: 12px; color: #999; text-align: center; }
+  @media print { body { padding: 0; } .stat { break-inside: avoid; } }
+</style>
+</head>
+<body>
+  <h1>Work Summary Report</h1>
+  <p class="subtitle">${report.startDate} to ${report.endDate}</p>
+  ${statsHtml}
+  ${highlightsHtml}
+  ${aiSummaryHtml}
+  ${decisionsHtml}
+  ${meetingsHtml}
+  ${pendingHtml}
+  ${tagsHtml}
+  <div class="footer">Generated by WorkLog AI</div>
+</body>
+</html>`;
+}
+
+export function downloadHtml(html: string, filename: string): void {
+  const blob = new Blob([html], { type: "text/html" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+}
