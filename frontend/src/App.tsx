@@ -6,6 +6,7 @@ import Search from "./pages/Search";
 import Settings from "./pages/Settings";
 import DayView from "./pages/DayView";
 import Login from "./pages/Login";
+import Report from "./pages/Report";
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { token, loading } = useAuth();
@@ -22,6 +23,7 @@ function AppRoutes() {
       <Route path="/search" element={<ProtectedRoute><Search /></ProtectedRoute>} />
       <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
       <Route path="/day/:date" element={<ProtectedRoute><DayView /></ProtectedRoute>} />
+      <Route path="/report" element={<ProtectedRoute><Report /></ProtectedRoute>} />
     </Routes>
   );
 }
