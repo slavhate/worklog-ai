@@ -1,4 +1,4 @@
-import type { DayWorklog, DashboardData, SearchResult, AppConfig, SetupStatus, PendingTask } from "../types";
+import type { DayWorklog, DashboardData, SearchResult, AppConfig, SetupStatus, PendingTask, ReportData } from "../types";
 
 const BASE = "/api";
 
@@ -91,6 +91,17 @@ export const api = {
 
   getHealth(): Promise<SetupStatus> {
     return fetchJSON("/health");
+  },
+
+  getReport(start: string, end: string): Promise<ReportData> {
+    return fetchJSON(`/report?start=${start}&end=${end}`);
+  },
+
+  generateReportSummary(startDate: string, endDate: string): Promise<{ summary: string }> {
+    return fetchJSON("/report/summary", {
+      method: "POST",
+      body: JSON.stringify({ startDate, endDate }),
+    });
   },
 
   async login(username: string, password: string): Promise<{ token: string; username: string }> {
