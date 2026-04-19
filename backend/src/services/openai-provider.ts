@@ -80,4 +80,13 @@ export class OpenAIProvider implements AIProvider {
     });
     return response.data[0].embedding;
   }
+
+  async summarize(prompt: string): Promise<string> {
+    trackUsage("text", prompt.length);
+    const response = await this.client.chat.completions.create({
+      model: "gpt-4o",
+      messages: [{ role: "user", content: prompt }],
+    });
+    return response.choices[0].message.content || "";
+  }
 }

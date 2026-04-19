@@ -88,4 +88,15 @@ export class ClaudeProvider implements AIProvider {
     });
     return response.embeddings[0];
   }
+
+  async summarize(prompt: string): Promise<string> {
+    trackUsage("text", prompt.length);
+    const response = await this.client.messages.create({
+      model: "claude-sonnet-4-6-20250514",
+      max_tokens: 2048,
+      messages: [{ role: "user", content: prompt }],
+    });
+    const content = response.content[0];
+    return content.type === "text" ? content.text : "";
+  }
 }

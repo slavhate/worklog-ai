@@ -78,4 +78,13 @@ export class OllamaProvider implements AIProvider {
     });
     return response.embeddings[0];
   }
+
+  async summarize(prompt: string): Promise<string> {
+    trackUsage("text", prompt.length);
+    const response = await this.client.chat({
+      model: "llama3.2",
+      messages: [{ role: "user", content: prompt }],
+    });
+    return response.message.content;
+  }
 }
