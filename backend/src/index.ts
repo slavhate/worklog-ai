@@ -16,6 +16,7 @@ import { createTasksRouter } from "./routes/tasks.js";
 import { createSearchRouter } from "./routes/search.js";
 import { createDashboardRouter } from "./routes/dashboard.js";
 import { createSettingsRouter } from "./routes/settings.js";
+import { createReportRouter } from "./routes/report.js";
 
 const PORT = 4000;
 const CONFIG_PATH = process.env.CONFIG_PATH || "./config.json";
@@ -45,6 +46,7 @@ async function main() {
     provider = createProvider(config);
     search = new SearchService(config.chromaUrl, (text) => provider.generateEmbedding(text));
   }));
+  app.use("/api", createReportRouter(dataPath, () => provider));
 
   if (config.aiProvider === "ollama") {
     ensureModels(config.ollamaUrl).catch(console.error);
