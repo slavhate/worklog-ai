@@ -23,6 +23,8 @@ AI-powered daily worklog manager. Type what you worked on in natural language, a
 - **Task time tracking** — tasks can carry a time (e.g. 15:00) shown in the UI
 - **Starred highlights** — mark entries as important with the star toggle, shown in sidebar
 - **Work summary report** — select a date range to view aggregated stats, highlights, decisions, meetings, and pending tasks with optional AI narrative summary and HTML download
+
+![Work Summary Report](media/work-summary-report.png)
 - **AI usage metrics** — sidebar tracks daily AI request counts and estimated tokens (persisted across restarts)
 - **Processing indicators** — animated progress bar and success summary on submission
 - **Dashboard** — today's tasks, meetings, pending items, overdue items at a glance
