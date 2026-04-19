@@ -52,6 +52,7 @@ export interface AIProvider {
   processText(text: string): Promise<StructuredEntry>;
   processImage(image: Buffer): Promise<string>;
   generateEmbedding(text: string): Promise<number[]>;
+  summarize(prompt: string): Promise<string>;
 }
 
 export interface ToggleTaskRequest {
@@ -69,4 +70,24 @@ export interface User {
 export interface JwtPayload {
   userId: string;
   username: string;
+}
+
+export interface ReportStats {
+  tasksCompleted: number;
+  tasksTotal: number;
+  meetingsAttended: number;
+  decisionsMade: number;
+  notesCount: number;
+  daysWithEntries: number;
+}
+
+export interface ReportData {
+  startDate: string;
+  endDate: string;
+  stats: ReportStats;
+  highlights: { text: string; date: string }[];
+  decisions: { text: string; date: string }[];
+  meetings: { time: string; text: string; date: string; attendees?: string[] }[];
+  pendingTasks: { text: string; date: string; due?: string }[];
+  tagFrequency: { tag: string; count: number }[];
 }
